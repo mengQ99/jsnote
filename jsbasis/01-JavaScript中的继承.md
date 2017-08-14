@@ -1,8 +1,6 @@
 ﻿# JavaScript中的继承
 
-标签（空格分隔）： 继承类型 
 
----
 ##  继承
 
 ### 1. 类式继承 
@@ -27,7 +25,8 @@ var p1 = new Worker('p1',22,'coder');
 p1.sayJob();//'job:coder'
 cnosole.log(p1.name);//undefined
 ```
-`Worker`继承了`Person`,而继承是通过创建`Person`的实例并将其赋值给`Worker.prototype`实现的。实现的本质是重写原型对象，代之以一个新类型的实例。于是，`Worker.prototype`不仅拥有`Person`实例所具有的全部属性和和方法，其内部还有一个指针`[[prototype]]`指向了`Person.prototype`。具体如下。
+`Worker`继承了`Person`,而继承是通过创建`Person`的实例并将其赋值给`Worker.prototype`实现的。实现的本质是重写原型对象，代之以一个新类型的实例。
+于是，`Worker.prototype`不仅拥有`Person`实例所具有的全部属性和和方法，其内部还有一个指针`[[prototype]]`指向了`Person.prototype`。具体如下。
 ```javascript
  (new Person()).__proto__ == Person.prototype
  Worker.prototype == new Person()
@@ -48,29 +47,35 @@ cnosole.log(p1.name);//undefined
 function Person(){
     this.name = ['Li', 'Yi'];
 }
+
 function Worker(){}
 Worker.prototype = new Person();
+
 var p1 = new Worker();
-console.log(p1.name);//['Li','Yi']
+p1.name;//['Li','Yi']
 p1.name.push('Wu');
+
 var p2 = new Worker();
-console.log(p2.name);//['li','Yi','Wu']
+p2.name;//['li','Yi','Wu']
 //构造函数继承
 function Person(age){
     this.name = ['Li', 'Yi'];
     this.age = age;
 }
+
 function Worker(age, job){
     Person.call(this, age);//继承Person 同时传参
     this.job = job;
 }
+
 var p1 = new Worker(22, 'cleaner');
-console.log(p1.name);//['Li','Yi']
+p1.name;//['Li','Yi']
 p1.name.push('Wu');//['Li','Yi','Wu']
-console.log(p1.age);//22
-console.log(p1.job);//cleaner
+p1.age;//22
+p1.job;//cleaner
+
 var p2 = new Worker(33, 'teacher');
-console.log(p2.name);//['li','Yi']
+p2.name;//['li','Yi']
 ```
 由于`call`这个方法可以更改函数的作用环境，因此在子类中对`Person`调用此方法，就是将子类中的变量在父类中重新执行一遍，这样一来`Worker`的每个实例对象就都具有自己`name`属性的副本了。
 
@@ -86,6 +91,7 @@ function Person(age){
 Person.prototype.sayAge = function(){
     console.log('age:' + this.age);
 }
+
 function Worker(age, job){
     Person.call(this, age);//构造函数继承 第二次调用Person()
     this.job = job;
@@ -94,11 +100,14 @@ Worker.prototype = new Person();//类式继承 第一次调用Person()
 Worker.prototype.sayJob = function(){
     console.log('job:' + this.job);
 }
+
 var p1 = new Worker(22, 'cleaner');
 var p2 = new Worker(33, 'coder');
+
 p1.name.push('Wu');
 p1.name;//['Li', 'Yi', 'Wu']
 p2.name;//['Li', 'Yi']
+
 p1.sayAge();//age:22
 p2.sayJob();//job:cleaner
 ```
@@ -118,6 +127,7 @@ var Person = {
 };
 var p1 = object(Person);
 var p2 = object(Person);
+
 p1.name;//['Li','Yi']
 p1.name.push('Wu');
 p2.name;//['Li', 'Yi', 'Wu']
@@ -137,6 +147,7 @@ function createPerson(o){
     };
     return p;//返回拓展后的对象
 }
+
 var p1 = createPerson(Person);
 p1.sayAge();//12
 ```
@@ -156,14 +167,17 @@ function Person(age){
 Person.prototype.sayAge = function(){
     console.log('age:' + this.age);
 };
+
 function Worker(age,job){
     Person.call(this, age);
     this.job = job;
 }
+
 inheritPrototype(Worker, Person);
 Worker.prototype.sayJob = function(){
     console.log('job:' + this.job);
 };
+
 var p1 = new Worker(12, 'student');
 p1.sayAge();//age:12
 p1.sayJob();//job:student
@@ -171,7 +185,6 @@ p1.sayJob();//job:student
 这种继承方式只调用了一次父类构造函数，效率高而且不破坏原型链。
 
 
-----------
 
 
 ## 2. 拓展
@@ -181,8 +194,10 @@ function Person(name, age){
     this.name = name;
     this.age = age;
 }
+
 var p1 = new Person('a',11);
 p1.name;//"a"
+
 var p2 = Person('b',21);
 p2.name;//TypeError: Cannot read property 'name' of undefined
 window.name;//"b"
@@ -219,6 +234,7 @@ function Person(name){
 但这个作用域安全的构造函数存在一个问题，使用构造函数继承时（不涉及原型链）继承将遭到破坏。
 ```javascript
 function Worker(name, job){
+    
     //这里的this对象并非Person的实例 返回的新对象new Person()也没有使用
     Person.call(this, name);
     this.job = job;
@@ -233,6 +249,7 @@ function Worker(name, job){
     this.job = job;
 }
 Worker.prototype = new Person();
+
 var p = new Worker('Li',22);
 p.name;//"Li"
 ```
