@@ -1,5 +1,6 @@
 ﻿# JavaScript中的继承
 
+标签： oo
 
 ##  1. 继承
 
@@ -188,7 +189,7 @@ p1.sayJob();//job:student
 
 
 ## 2. 拓展
-### 1. 作用域安全的构造函数
+### 作用域安全的构造函数
 ```javascript
 function Person(name, age){
     this.name = name;
@@ -204,22 +205,6 @@ window.name;//"b"
 ```
 当没有用`new`调用构造函数而是直接调用时，由于该`this`对象是在运行时绑定的，因此this会映射到全局对象`window`上，导致错误对象属性的意外增加。
 
-#### **new 操作**
-使用`new`来调用函数，或者说发生构造函数调用时，会自动执行下面的操作。
-
-```var p = new Person();```
-
-1. 创建全新对象`p`
-2. 这个新对象会被执行`[[prototype]]`连接，`p._proto_ == Person.prototype`
-3. 这个新对象会绑定到函数调用的`this`
-4. 如果函数没有返回其他对象，那么`new` 表达式中的函数调用自动返回当前新对象
-
-#### **this 规则**
-
-1. 函数`new`调用，`this`绑定新创建的对象。`var bar = new foo(); `
-2. 函数通过`call`、`apply`、`bind`绑定调用，`this`绑定指定对象。`var bar = foo.call(obj);`
-3. 函数在某个上下文对象中调用，`this`绑定当前上下文对象。`var bar = obj.foo();`
-4. 如果上述皆不是，使用默认绑定。如果处于严格模式，绑定到`undefined`，否则绑定到全局对象`window`。 `var bar = foo();`
 
 为解决这个问题我们可以创建一个作用域安全的构造函数。调用Person()时无论是否使用new操作符，都会返回一个Person的新实例，这就避免了在全局对象上意外设置属性的情况发生。
 ```javascript
@@ -260,6 +245,25 @@ Worker.prototyoe.__proto__ == Person.prototype
 p.__proto__ == Worker.prototype
 P.__proto__.__proto__ == Person.Prototype // this instanceof Person == true
 ```
+#### **new 操作**
+使用`new`来调用函数，或者说发生构造函数调用时，会自动执行下面的操作。
+
+```var p = new Person();```
+
+1. 创建全新对象，也就是上面的实例`p`
+2. 这个新对象会被执行`[[prototype]]`连接，`p._proto_ == Person.prototype`
+3. 这个新对象会绑定到函数调用的`this`
+4. 如果函数没有返回其他对象，那么`new` 表达式中的函数调用自动返回当前新对象
+
+#### **this 规则**
+```function foo() { this.x = 1 }```
+
+1. 函数`new`调用，`this`绑定新创建的对象。`var bar = new foo(); `
+2. 函数通过`call`、`apply`、`bind`绑定调用，`this`绑定指定对象。`var bar = foo.call(obj);`
+3. 函数在某个上下文对象中调用，`this`绑定当前上下文对象。`var bar = obj.foo();`
+4. 如果上述皆不是，使用默认绑定。如果处于严格模式，绑定到`undefined`，否则绑定到全局对象`window`。 `var bar = foo();`
+
+#### **instanceof**
 顺带提一下`instantof`的实现。实际上是顺着原型链向上查找对应原型，找到返回`true`，反之`false`。
 ```L.__proto__.__proto__....__proto__ === R.prototype```
 ```javascript
