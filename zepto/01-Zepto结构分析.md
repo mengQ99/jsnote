@@ -1,0 +1,124 @@
+﻿# Zepto结构分析
+
+标签（空格分隔）： zepto
+
+---
+## 整体结构
+```javascript
+var Zepto = (function () {
+  
+  var $
+  
+  $ = function(selector, context){
+    return zepto.init(selector, context)
+  }
+  ...
+  zepto.Z.prototype = Z.prototype = $.fn
+  $.zepto = zepto
+  
+  return $ //此处$是当前函数内部的$ 与window.$不同
+})()
+
+window.Zepto = Zepto
+window.$ === undefined && (window.$ = Zepto) // 优先级 关系 > 逻辑
+```
+> - 利用立调函数将返回值 `$` 赋值给 `Zepto`
+- 然后将 `Zepto` 暴露给全局变量
+- 如果全局 `$` 未定义则将 `Zepto` 赋值给 `$` 
+
+## 核心代码
+
+以下是立调函数中的核心代码。
+```javascript
+var $, zepto = {};
+
+function Z(dom, selector) {
+  var i, len = dom ? dom.length : 0
+  for (i = 0; i < len; i++) this[i] = dom[i]
+  this.length = len
+  this.selector = selector || ''
+}
+
+zepto.Z = function(dom, selector) {
+  return new Z(dom, selector)
+}
+
+zepto.init = function(selector, context) {
+  var dom
+  ...
+  return zepto.Z(dom, selector)
+}
+
+$ = function() {
+  return zepto.init(selector, context)
+}
+
+// 定义若干工具函数
+$.fn = {
+  constructor: zepto.Z,
+  method: function() {
+    return this
+  }
+}
+
+zepto.Z.prototype = Z.prototype = $.fn
+```
+
+>- `$` 是一个函数，在其函数内部调用了 `zepto.init()`
+- 在 `init()` 中获取 `dom` 元素集合，并将这一集合交给了 `zepto.Z()` 处理
+- `zepto.Z()` 返回构造函数 `Z()` 的实例
+- 在构造函数 `Z()` 中：
+    - 将 `dom` 展开作为实例属性
+    - 保存长度 `length` 与选择符 `selector`
+    - 获得对象数组
+- 最后将对象数组的隐式原型指向 `$.fn`
+
+**总之，`$` 方法返回一个对象数组，其 `__proto__` 指向 `$.fn`，以便在zepto对象数组上调用各种工具函数。**
+![zepto结构分析][1]
+
+    这里的new Z().__proto__指向$.fn，是因为代码中的 Z.prototype = $.fn
+```javascript    
+new Z().__proto__ === Z.prototype
+Z.prototype = $.fn 
+new Z().__proto__ === $.fn
+```
+## zepto.init
+```javascript
+zepto.init = function(selector, context) {
+    var dom
+    // 1. 不传参返回空集合
+    if (!selector) return zepto.Z()
+    // 2. 参数为字符串
+    else if (typeof selector == 'string') {
+      selector = selector.trim()
+      // 2.1 字符串内容为HTML标签的情况
+      if (selector[0] == '<' && fragmentRE.test(selector))
+        dom = zepto.fragment(selector, RegExp.$1, context), selector = null
+      // 2.2 context用于限定查找范围
+      else if (context !== undefined) return $(context).find(selector)
+      // 2.3 普通css选择符字符串 使用querySelectorAll(selector)
+      else dom = zepto.qsa(document, selector)
+    }
+    // 3. 如果传入的是函数 调用$(document).ready方法
+    else if (isFunction(selector)) return $(document).ready(selector)
+    // 4. 如果参数已经是一个Zepto对象 直接返回
+    else if (zepto.isZ(selector)) return selector
+    else {
+      // 5. 参数是数组 将数组中的null/undefined剔除后返回 
+      if (isArray(selector)) dom = compact(selector)
+      // 6. 参数是对象 将传入对象数组化
+      else if (isObject(selector))
+        dom = [selector], selector = null
+      // 7. 下面三种情况同上面重复 原因是考虑了使用new String()创建字符串的可能性 
+      // typeof newString('selector') === 'object' 
+      else if (fragmentRE.test(selector))
+        dom = zepto.fragment(selector.trim(), RegExp.$1, context), selector = null
+      else if (context !== undefined) return $(context).find(selector)
+      else dom = zepto.qsa(document, selector)
+    }
+    // 8. 最后调用zepto.Z将得到的dom以及selector传出
+    return zepto.Z(dom, selector)
+}
+```
+
+  [1]: zepto.png
