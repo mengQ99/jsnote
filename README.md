@@ -18,6 +18,7 @@ TODO..
 ### Javascript基础笔记
 
 1. [Js中的继承][8]
+2. [单例模式](jsbasis/02-单例模式.md)
 
 ### zepto源码阅读
 
