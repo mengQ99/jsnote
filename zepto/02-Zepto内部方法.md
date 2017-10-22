@@ -1,0 +1,149 @@
+﻿# Zepto内部方法
+
+
+## type - 判断数据类型
+
+```javascript
+// 1.获得原生toString方法 以免被重写
+var class2type = {}, toString = class2type.toString;
+
+function type(obj) {
+    // 3.这里对undefined和null作特殊处理 转为字符串原样输出
+    //   其它对象通过查询class2Type得出类型
+    return obj == null ? String(obj) :
+      class2type[toString.call(obj)] || "object"
+}
+// 2.初始化class2Type对象
+$.each("Boolean Number String Function Array Date RegExp Object Error".split(" "), function(i, name) {
+    class2type[ "[object " + name + "]" ] = name.toLowerCase()
+})
+```
+
+    对象class2type初始化后的结构为：
+    {
+       "[object Array]": "array"
+       "[object Boolean]": "boolean"
+       "[object Date]": "date"
+       "[object Function]": "function"
+       "[object Number]": "number"
+       "[object Object]": "object"
+       "[object RegExp]": "regexp"
+       "[object String]": "string"
+    }
+
+## isWindow - 判断是否为window对象
+```javascript
+function isWindow(obj){ 
+    return obj != null && obj == obj.window 
+} 
+```
+`window` 对象表示一个包含 `DOM` 文档的窗口。由于 `window` 对象的 `window` 属性指向其自身，所以可借此特性来判断是否为 `window` 对象。
+```javascript
+window.window === window // true
+window.window.window === window // true
+```
+另外需要注意的是，`Window` 区别于 `window` 。前者是构造函数后者是该构造函数的实例，不要混用。
+```javascript
+window instanceof Window // true
+window === Window // false
+```
+## isDocument - 判断是否为document对象
+```javascript
+function isDocument(obj){ 
+    return obj != null && obj.nodeType == obj.DOCUMENT_NODE 
+}
+```
+前面提到， `window` 是一个包含 `DOM` 文档的窗口。其中的 `DOM` 文档指的就是 `document` 对象。
+每个节点都拥有 `nodeType` 属性，用于表明节点类型。这里使用 `nodeType` 与 `document` 节点的数值常量相比较来判断是否为 `document` 节点。
+|element instanceof Node|
+|--|
+|Node.ELEMENT_NODE (1)|
+|Node.ATTRIBUTE_NODE (2)|
+|Node.TEXT_NODE (3)|
+|Node.COMMENT_NODE (8)|
+|Node.DOUCMENT_NODE (9)|
+
+    
+    由于低版本 IE 未公开 Node 类型构造函数，因此将 nodeType 直接与数值比较兼容性更好。
+## isPlainObject - 判断是否为纯对象
+
+```javascript
+function isPlainObject(obj) {
+    return isObject(obj) && !isWindow(obj) && Object.getPrototypeOf(obj) == Object.prototype
+}
+```
+通过字面量语法或者 `new Object()` 创建的对象，返回 `true`。   
+
+另有一种情况，检测构造函数的原型也会返回 `true`。
+```javascript
+function Foo(){} 
+Object.getPrototyprOf(Foo.prototype) === Object.prototype
+getPrototyprOf === __proto__
+``` 
+## flatten - 数组扁平化
+```javascript
+function flatten(array) { 
+    return array.length > 0 ? $.fn.concat.apply([], array) : array
+}
+```
+这一方法仅能扁平化数组最外一层，多层嵌套则奈何不了。
+
+    [[1, [2, 3]], [4, 5]] => [1, [2, 3], 4, 5]
+
+`$.fn.concat.apply([], array)` 等同于 `[].concat(array)`，巧妙利用 `concat` 方法将数组拼接以实现简单扁平化。
+## uniq - 数组去重
+```javascript
+function uniq(array){ 
+    return filter.call(array, function(item, idx){ 
+        return array.indexOf(item) == idx })
+}
+```
+使用了原生内置 `filter` 方法，过滤时将当前项在数组中第一次出现的索引与本身的索引相比较，相等保留，不等去重。
+## camelize - 驼峰命名
+通常用于内部 `css` 的 `camelCase` 转换，如 `font-size` 转为 `fontSize`。
+```javascript
+function camelize(str){ 
+    return str.replace(/-+(.)?/g, function(match, chr){ 
+        return chr ? chr.toUpperCase() : '' })
+}
+```
+先分析正则，`/-+(.)?/g` 捕获至少一个短杠 `-` 后的单个字符（也可能没有字符）。
+
+| 符号 | 含义 |
+|:----:|-----|
+| . | 除换行符外的任意单个字符|
+| + | 匹配至少一个|
+| * | 匹配任意个|
+| ? | 匹配零个或一个|
+
+然后是 `replace` 中[回调函数的使用][1]，参数 `match` 是匹配的子串，而 `chr` 是 捕获的单个字符。前面说了单个字符可能存在也可能不存在，存在时将其转为大写，不存在则直接置空。
+**这里需要注意，正则表达式为全局模式时，每次匹配都会调用回调函数将匹配子串替换为回调函数中的返回值。**
+```
+camelize('get--ele-by-class-name') //getEleByClassName
+```
+|time|match|chr|
+|:--:|:--:|:--:|
+|1|--e|e|
+|2|-b|b|
+|3|-c|c|
+|4|-n|n|
+
+
+    源码应当考虑字符串头部出现短杠的特殊情况，否则导致首字母大写。
+
+## dasherize - 短杠命名
+驼峰命名转换为短杠命名
+```javascript
+function dasherize(str) {
+    return str.replace(/::/g, '/')
+        .replace(/([A-Z]+)([A-Z][a-z])/g, '$1_$2')
+        .replace(/([a-z\d])([A-Z])/g, '$1_$2')
+        .replace(/_/g, '-')
+        .toLowerCase()
+}
+```
+1. 双冒号转换为斜线 `dasherize('::before') => /before`
+2. 连续大写字母后出现小写字母的划分 `dasherize('DOMElement') => DOM_Element`
+3. 小写字母或数字后出现大写字母划分 `dasherize('zIndex') => z_Index`
+4. 短杠替换下划线且全部小写  `dasherize('DOMEle2Attr::before') => dom-ele2-attr/before`
+  [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace#%E6%8C%87%E5%AE%9A%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E4%BD%9C%E4%B8%BA%E5%8F%82%E6%95%B0
