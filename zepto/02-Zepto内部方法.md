@@ -116,7 +116,7 @@ function camelize(str){
 | * | 匹配任意个|
 | ? | 匹配零个或一个|
 
-然后是 `replace` 中[回调函数的使用][1]，参数 `match` 是匹配的子串，而 `chr` 是 捕获的单个字符。前面说了单个字符可能存在也可能不存在，存在时将其转为大写，不存在则直接置空。
+然后是 `replace` 中[回调函数的使用][2]，参数 `match` 是匹配的子串，而 `chr` 是 捕获的单个字符。前面说了单个字符可能存在也可能不存在，存在时将其转为大写，不存在则直接置空。
 **这里需要注意，正则表达式为全局模式时，每次匹配都会调用回调函数将匹配子串替换为回调函数中的返回值。**
 ```
 camelize('get--ele-by-class-name') //getEleByClassName
@@ -146,4 +146,7 @@ function dasherize(str) {
 2. 连续大写字母后出现小写字母的划分 `dasherize('DOMElement') => DOM_Element`
 3. 小写字母或数字后出现大写字母划分 `dasherize('zIndex') => z_Index`
 4. 短杠替换下划线且全部小写  `dasherize('DOMEle2Attr::before') => dom-ele2-attr/before`
-  [1]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace#%E6%8C%87%E5%AE%9A%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E4%BD%9C%E4%B8%BA%E5%8F%82%E6%95%B0
+
+
+
+[2]: https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/String/replace#%E6%8C%87%E5%AE%9A%E4%B8%80%E4%B8%AA%E5%87%BD%E6%95%B0%E4%BD%9C%E4%B8%BA%E5%8F%82%E6%95%B0
