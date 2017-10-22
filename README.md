@@ -17,13 +17,14 @@ TODO..
 
 ### Javascript基础笔记
 
-1. [Js中的继承][8]
+1. [Js中的继承](jsbasis/01-JavaScript%E4%B8%AD%E7%9A%84%E7%BB%A7%E6%89%BF.md)
 2. [单例模式](jsbasis/02-单例模式.md)
 3. [工厂模式](jsbasis/03-工厂模式.md)
 
 ### zepto源码阅读
 
-1. [整体结构分析][9]
+1. [整体结构分析](zepto/01-%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90.md)
+2. [内部方法分析](zepto/02-内部方法.md)
 
 
   [1]: es6/01-%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%AD%A3%E5%88%99%E6%89%A9%E5%B1%95.md
@@ -33,5 +34,3 @@ TODO..
   [5]: es6/05-Set/Map%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md
   [6]: es6/06-Generator%E5%87%BD%E6%95%B0.md
   [7]: es6/07-Promise.md
-  [8]: jsbasis/01-JavaScript%E4%B8%AD%E7%9A%84%E7%BB%A7%E6%89%BF.md
-  [9]: zepto/01-Zepto%E7%BB%93%E6%9E%84%E5%88%86%E6%9E%90.md
