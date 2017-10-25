@@ -1,4 +1,4 @@
-﻿# CommonJS
+# CommonJS
 
 
 ## 1. 概述
@@ -106,7 +106,7 @@ var module = {
 
 (function(exports, module, ...){
     exports.add = () => { return a + b }
-})(exports, module);
+})(module.exports, module);
 
 exports.add(3, 5); //8
 ```
@@ -136,6 +136,37 @@ exports.add(3, 5); //8
 为每个模块建立缓存对象。
 
 
+## 4. ES6的模块规范
 
+`ES6` 模块采用静态化思想，使得编译时就能确定模块间的依赖关系。而 `CommonJS` 和 `AMD` 都只能在运行时确定。
 
+### export - 定义模块
 
+```javascript
+// example.js
+export var add = function (a, b){
+    return a + b;
+}
+```
+
+### import - 引入模块
+```javascript
+// result.js
+import {add} from 'example';
+var res = add(3, 5);
+```
+
+    注意：import 会执行所加载的模块。
+
+### export default - 默认输出
+```javascript
+// defalut.js
+export default function foo(){}
+
+// import 指令可以指定任意名字 无需知道所需加载的变量或函数名
+import anyName from 'default'
+```
+### 模块继承
+```javascript
+export * from 'example'  // export * 表示输出模块的所有变量及函数
+```
