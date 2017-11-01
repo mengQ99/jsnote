@@ -18,7 +18,7 @@ TODO..
 
 ### Javascript基础笔记
 
-1. [Js中的继承](jsbasis/01-JavaScript%E4%B8%AD%E7%9A%84%E7%BB%A7%E6%89%BF.md)
+1. [JavaScript中的继承](jsbasis/01-JavaScript%E4%B8%AD%E7%9A%84%E7%BB%A7%E6%89%BF.md)
 2. [单例模式](jsbasis/02-单例模式.md)
 3. [工厂模式](jsbasis/03-工厂模式.md)
 
