@@ -1,6 +1,5 @@
 ﻿# JavaScript中的继承
 
-标签： oo
 
 ##  1. 继承
 
@@ -264,7 +263,7 @@ P.__proto__.__proto__ == Person.Prototype // this instanceof Person == true
 4. 如果上述皆不是，使用默认绑定。如果处于严格模式，绑定到`undefined`，否则绑定到全局对象`window`。 `var bar = foo();`
 
 #### **instanceof**
-顺带提一下`instantof`的实现。实际上是顺着原型链向上查找对应原型，找到返回`true`，反之`false`。
+顺带提一下`instanceof`的实现。实际上是顺着原型链向上查找对应原型，找到返回`true`，反之`false`。
 ```L.__proto__.__proto__....__proto__ === R.prototype```
 ```javascript
 // L:运算符左表达式 R:右表达式
