@@ -1,4 +1,4 @@
-﻿# jsnote/Javascript学习笔记
+﻿# Javascript学习笔记
 
 ### 数据结构与算法
 
@@ -11,7 +11,7 @@ TODO..
 3. [函数扩展](es6/03-%E5%87%BD%E6%95%B0%E6%89%A9%E5%B1%95.md)
 4. [对象扩展](es6/04-%E5%AF%B9%E8%B1%A1%E6%89%A9%E5%B1%95.md)
 5. [Set/Map数据结构](es6/05-Set/Map%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84.md)
-6. [Generator函数](es6/06-Generator%E5%87%BD%E6%95%B0.md)
+6. [Generator/async](es6/06-Generator%E5%87%BD%E6%95%B0.md)
 7. [Promise对象](es6/07-Promise.md)
 8. [CommonJS](es6/08-CommonJS.md)
 
