@@ -13,12 +13,12 @@
 - [Set / Map数据结构](es6/05-Set/Map数据结构.md)
 - [Generator / async](es6/06-Generator函数.md)
 - [Promise对象](es6/07-Promise.md)
-- [CommonJS / es6 modules](es6/08-CommonJS.md)
+- [CommonJS / es6 module](es6/08-CommonJS.md)
 
 
 ### JavaScript basis
 
-- [继承](jsbasis/01-JavaScript中的继承.md)
+- [继承](jsbasis/01-继承.md)
 - [单例模式](jsbasis/02-单例模式.md)
 - [工厂模式](jsbasis/03-工厂模式.md)
 
