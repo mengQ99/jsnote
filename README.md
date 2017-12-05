@@ -21,6 +21,7 @@
 - [继承](jsbasis/01-继承.md)
 - [单例模式](jsbasis/02-单例模式.md)
 - [工厂模式](jsbasis/03-工厂模式.md)
+- [发布订阅模式](jsbasis/04-发布订阅模式.md)
 
 ### Reading zepto
 
