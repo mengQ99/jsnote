@@ -2,8 +2,8 @@
 
 ### Data structure&Algorithms
 
-- 排序算法
-- 树
+- [排序算法](ds&algo/排序算法.md)
+- [树](ds&algo/树.md)
 
 ### ES6 notes
 
