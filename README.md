@@ -1,8 +1,9 @@
 ﻿# JavaScript learning notes
 
-### Data structure
+### Data structure&Algorithms
 
-- todo..
+- 排序算法
+- 树
 
 ### ES6 notes
 
