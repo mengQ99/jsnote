@@ -51,6 +51,7 @@ imgLoad('Image.jpg').then(function(value){
 
 ### Promise.prototype.then
 `then()` 为 `Promise` 实例添加回调函数，返回新的 `Promise` 实例。第一个参数是 `Resolved` 状态的回调函数，第二个参数是 `Rejected` 状态的回调函数。第二个参数可选。
+
 ```javascript
 promise.then(function(value){
     //success
@@ -83,8 +84,24 @@ promise.then(function(value){
 与`Promise.all`方法形式上有些类似，但只要其中一个参数对象的状态改变，`Promise`对象的状态就随之改变。
 ### Promise.resolve
 将现有对象转为Promise对象。
+
+```js
+Promise.resolve(1);
+// 等价于
+new Promise((resolve) => resolve(1));
+```
+
 ### Promise.reject
 返回一个状态为失败的Promise对象，并将返回值传递给对应的处理方法。
+
+```js
+Promise.reject(new Error("err")) 
+// 等价于
+new Promise((resolve, reject) => reject(new Error("err")));
+```
+
+
+
 ## Promise的实现
 ### 基础实现
 ```javascript
@@ -276,4 +293,4 @@ getName()
 ```
 
 
-  [1]: https://promisesaplus.com/#point-40
+[1]: https://promisesaplus.com/#point-40
